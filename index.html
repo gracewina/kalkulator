@@ -1,1 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Integral Substitusi - Gracewinna</title>
+    <style>
+        /* Desain responsif agar ramah dibuka di HP dan Komputer */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+        .author {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            font-size: 1rem;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 5px solid #3498db;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        label {
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.9rem;
+        }
+        input {
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 15px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        button:hover {
+            background-color: #27ae60;
+        }
+        .hasil-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+        .final-result {
+            font-size: 1.25rem;
+            color: #c0392b;
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+            background: #fadbd8;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/MathJax.js?config=TeX-mml-chtml"></script>
+</head>
+<body>
 
+    <div class="container">
+        <h1>Kalkulator Integral</h1>
+        <div class="author">Oleh: <strong>Gracewinna</strong></div>
+        
+        <div class="info-box">
+            Mencari penyelesaian integral substitusi bentuk:<br>
+            <div style="text-align: center; margin-top: 5px;">$$\int a \cdot x \cdot (x^2 + b)^n \, dx$$</div>
+        </div>
+
+        <div class="input-group">
+            <div>
+                <label for="input-a">Nilai koefisien luar (a):</label>
+                <input type="number" id="input-a" value="2">
+            </div>
+            <div>
+                <label for="input-b">Nilai konstanta dalam (b):</label>
+                <input type="number" id="input-b" value="5">
+            </div>
+            <div>
+                <label for="input-n">Pangkat luar (n):</label>
+                <input type="number" id="input-n" value="3">
+            </div>
+            <button onclick="hitungSubstitusi()">Hitung Sekarang</button>
+        </div>
+
+        <div id="hasil-box" class="hasil-box" style="display: none;">
+            <h3 style="margin-top: 0;">Langkah Penyelesaian:</h3>
+            <div id="langkah-langkah"></div>
+            <h3 style="margin-bottom: 5px;">Hasil Akhir:</h3>
+            <div id="hasil-akhir" class="final-result"></div>
+        </div>
+    </div>
+
+    <script>
+        function hitungSubstitusi() {
+            const a = parseFloat(document.getElementById('input-a').value);
+            const b = parseFloat(document.getElementById('input-b').value);
+            const n = parseFloat(document.getElementById('input-n').value);
+
+            if (isNaN(a) || isNaN(b) || isNaN(n)) {
+                alert("Harap masukkan semua parameter angka dengan benar.");
+                return;
+            }
+
+            document.getElementById('hasil-box').style.display = 'block';
+
+            // Rumus integral substitusi khusus bentuk ini:
+            // u = x^2 + b  -> du = 2x dx -> x dx = du/2
+            // Integral menjadi: (a/2) * \int u^n du = (a / (2 * (n+1))) * u^(n+1)
+            const kLuar = a / 2;
+            const pangkatBaru = n + 1;
+            const kAkhir = kLuar / pangkatBaru;
+
+            let langkahText = `
+                <p><strong>Step 1:</strong> Misalkan $u = x^2 + ${b}$</p>
+                <p> Maka turunan $du = 2x \, dx \\implies x \, dx = \\frac{du}{2}$</p>
+                <p><strong>Step 2:</strong> Substitusikan nilai ke dalam fungsi:</p>
+                <p>$$\\int ${a}x (x^2 + ${b})^{${n}} \, dx = \\int ${a} \\cdot u^{${n}} \\cdot \\frac{du}{2}$$</p>
+                <p>$$= ${kLuar} \\int u^{${n}} \, du$$</p>
+                <p><strong>Step 3:</strong> Integralkan fungsi $u$:</p>
+                <p>$$= ${kLuar} \\cdot \\frac{1}{${pangkatBaru}} u^{${pangkatBaru}} + C$$</p>
+            `;
+
+            let hasilText = "";
+            if (Number.isInteger(kAkhir)) {
+                hasilText = `$$${kAkhir}(x^2 + ${b})^{${pangkatBaru}} + C$$`;
+            } else {
+                hasilText = `$$\\frac{${kLuar}}{${pangkatBaru}} (x^2 + ${b})^{${pangkatBaru}} + C$$`;
+            }
+
+            document.getElementById('langkah-langkah').innerHTML = langkahText;
+            document.getElementById('hasil-akhir').innerHTML = hasilText;
+
+            // Memperbarui render teks matematika dari MathJax
+            MathJax.typeset();
+        }
+    </script>
+</body>
+</html>
